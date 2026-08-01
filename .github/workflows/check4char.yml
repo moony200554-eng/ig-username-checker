@@ -1,0 +1,38 @@
+name: Instagram 4-Char Username Checker
+
+on:
+  schedule:
+    - cron: "30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-4char-usernames:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run 4-char username checker
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: python ig_4char_checker.py
+
+      - name: Commit updated state back to repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add checker_state_4char.json available_4char_usernames.txt
+          git diff --quiet --cached || git commit -m "Update 4-char checker state [skip ci]"
+          git push
