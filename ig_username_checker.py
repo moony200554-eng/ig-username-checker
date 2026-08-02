@@ -219,11 +219,25 @@ def main():
         # practical floor for the free signup-check endpoint.
         time.sleep(random.uniform(1.5, 3))
 
-    summary = (
-        if new_available_this_run:
+    if new_available_this_run:
         new_names = "\n".join(available[-new_available_this_run:])
     else:
         new_names = "(none)"
+
+    summary = (
+        f"⏸ Paused after this run.\n"
+        f"Checked this run: {checks_this_run}\n"
+        f"New available this run: {new_available_this_run}\n"
+        f"Total available: {len(available)}\n"
+        f"Total taken: {taken}\nTotal unclear: {unclear}\n\n"
+        f"New: {new_names}"
+    )
+    print("\n--- Summary ---")
+    print(summary)
+    send_telegram(summary)
+
+    with open("available_usernames.txt", "w") as f:
+        f.write("\n".join(available))
 
     summary = (
         f"⏸ Paused after this run.\n"
