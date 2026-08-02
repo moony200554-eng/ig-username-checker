@@ -187,11 +187,18 @@ def main():
         time.sleep(random.uniform(1.5, 3))
 
     summary = (
-        f"⏸ Paused after this run (4-char).\n"
-        f"New this run: {new_available_this_run}\n"
+        if new_available_this_run:
+        new_names = "\n".join(available[-new_available_this_run:])
+    else:
+        new_names = "(none)"
+
+    summary = (
+        f"⏸ Paused after this run.\n"
+        f"Checked this run: {checks_this_run}\n"
+        f"New available this run: {new_available_this_run}\n"
         f"Total available: {len(available)}\n"
         f"Total taken: {taken}\nTotal unclear: {unclear}\n\n"
-        + "\n".join(available[-new_available_this_run:]) if new_available_this_run else "No new ones this run."
+        f"New: {new_names}"
     )
     print("\n--- Summary ---")
     print(summary)
