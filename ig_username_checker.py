@@ -147,9 +147,7 @@ def send_telegram(message):
     except requests.RequestException as e:
         print(f"[Telegram error] {e}")
 
-
-def check_username(session, username):
-    _debug_count = 0
+_debug_count = 0
 
 def check_username(session, username):
     global _debug_count
