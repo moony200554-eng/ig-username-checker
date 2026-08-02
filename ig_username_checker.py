@@ -53,7 +53,7 @@ MAX_RESULTS = 20
 
 # Cap on total checks per run — useful when scheduling short bursts (e.g. via
 # GitHub Actions). Set to None to only stop based on MAX_RESULTS above.
-MAX_CHECKS_PER_RUN = None
+MAX_CHECKS_PER_RUN = 100
 
 STATE_FILE = "checker_state.json"
 
