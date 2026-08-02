@@ -42,7 +42,7 @@ TELEGRAM_CHAT_ID = os.environ.get("TG_CHAT_ID", "YOUR_CHAT_ID_HERE")
 MAX_RESULTS = 20
 
 # Cap on total checks per run — useful for scheduled short bursts
-MAX_CHECKS_PER_RUN = None
+MAX_CHECKS_PER_RUN = 100
 
 STATE_FILE = "checker_state_4char.json"
 
