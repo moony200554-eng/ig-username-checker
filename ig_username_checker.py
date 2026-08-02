@@ -149,7 +149,10 @@ def send_telegram(message):
 
 
 def check_username(session, username):
-    """Returns True if available, False if taken, None if unclear/error."""
+    _debug_count = 0
+
+def check_username(session, username):
+    global _debug_count
     data = {
         "email": f"{username}_{random.randint(1000,9999)}@example.com",
         "username": username,
@@ -158,9 +161,30 @@ def check_username(session, username):
     }
     try:
         resp = session.post(SIGNUP_URL, data=data, timeout=10)
+        if _debug_count < 3:
+            _debug_count += 1
+            send_telegram(f"DEBUG [{username}] status={resp.status_code} body={resp.text[:300]}")
         result = resp.json()
-    except (ValueError, requests.RequestException):
+    except (ValueError, requests.RequestException) as e:
+        if _debug_count < 3:
+            _debug_count += 1
+            send_telegram(f"DEBUG [{username}] EXCEPTION: {e}")
         return None
+
+    errors = result.get("errors", {})
+    username_errors = errors.get("username", [])
+
+    if not username_errors:
+        return True
+
+    for err in username_errors:
+        msg = err.get("message", "").lower() if isinstance(err, dict) else str(err).lower()
+        if "taken" in msg or "another account" in msg:
+            return False
+        if "only allowed" in msg or "letters" in msg or "too" in msg:
+            return None
+
+    return None
 
     errors = result.get("errors", {})
     username_errors = errors.get("username", [])
